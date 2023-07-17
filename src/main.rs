@@ -1,3 +1,5 @@
+use std::net::SocketAddr;
+
 use axum::{
     routing::get,
     Router, handler::Handler,
@@ -30,9 +32,7 @@ async fn main() {
         // `GET /` goes to `root`
         .route("/", get(traced_root));
 
-    // run our app with hyper, listening globally on port 3000
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:9000").await.unwrap();
-    let addr = listener.local_addr().unwrap();
+    let addr = SocketAddr::from(([127, 0, 0, 1], 19000));
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
